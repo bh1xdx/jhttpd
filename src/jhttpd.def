@@ -1,0 +1,6 @@
+; jhttpd.lib
+
+EXPORTS
+JHttpCreateService @ 1
+JHttpdestroyService @ 2
+
