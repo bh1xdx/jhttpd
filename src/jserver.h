@@ -14,27 +14,26 @@
 
 #include "jhttpd.h"
 
-#include "HttpSocket.h"
-#include "TcpListener.h"
+#include "jsocket.h"
+#include "jtcplistener.h"
+#include "jtheadpool.h"
 
-#include "config.h"
-
-class JLoger;
+#include "jconfig.h"
 
 class JServer : public JObject, public NoCopyable
 {
 public:
 
-    JServer()
+    JServer(uint32_t threadcount)
         : JObject("JServer")
     {
         m_running.store(false);
+        m_threadPool = std::make_shared<ThreadPool>(threadcount);
     }
     ~JServer() {};
 
-
     using TranspPort = TcpListener::TranspPort;
-    enum { DEFAULT_PORT = HTTP_SERVER_PORT };
+    enum { DEFAULT_PORT = JHTTPD_SERVER_PORT };
 
 public:
 
@@ -53,13 +52,14 @@ public:
 
     bool listen(int maxConnections);
     bool run();
+    void stop();
 
 
     JLoger &loger();
 
     uint32_t resp_count() const;
-    JHttpRespose *resp_at(uint32_t idx) const;
-    uint32_t resp_add(JHttpRespose *);
+    JHttpResp *resp_at(uint32_t idx) const;
+    uint32_t resp_add(JHttpResp *);
 
 protected:
     TcpSocket::Handle accept() { 
@@ -67,14 +67,13 @@ protected:
     }
 
 private:
-    JLoger m_loger;
-
     TranspPort _serverPort = DEFAULT_PORT;
     TcpListener::Handle _tcpServer;
     std::string _webRootPath = "/tmp";
 
-    std::vector<JHttpRespose*> m_resps;
+    std::vector<JHttpResp*> m_resps;
     std::atomic<bool> m_running;
+    std::shared_ptr<ThreadPool> m_threadPool;
 };
 
 

@@ -8,9 +8,9 @@
 
 /* -------------------------------------------------------------------------- */
 
-#include "TransportSocket.h"
-#include "Tools.h"
-#include "OsSocketSupport.h"
+#include "jtransportsocket.h"
+#include "jtools.h"
+#include "jossocketsupport.h"
 
 #include <thread>
 

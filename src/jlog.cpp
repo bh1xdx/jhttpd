@@ -1,7 +1,7 @@
 
 
 #include "jlog.h"
-#include "helper.h"
+#include "jhelper.h"
 
 #include <cstdarg>
 #include <iostream>

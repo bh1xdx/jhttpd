@@ -19,6 +19,7 @@
 #include <memory>
 #include <string>
 
+#include "jconfig.h"
 
 /* -------------------------------------------------------------------------- */
 
@@ -83,7 +84,7 @@ public:
      * @param uri The input string to parse
      */
     void parseUri(const std::string& uri) {
-        _uri = uri == "/" ? "index.html" : uri;
+        _uri = uri == "/" ? JHTTPD_SERVER_INDEX : uri;
     }
 
 

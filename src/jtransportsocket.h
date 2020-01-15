@@ -15,8 +15,8 @@
 
 /* -------------------------------------------------------------------------- */
 
-#include "config.h"
-#include "OsSocketSupport.h"
+#include "jconfig.h"
+#include "jossocketsupport.h"
 
 
 #include <chrono>
@@ -162,7 +162,7 @@ public:
 
 private:
     SocketFd _socket = 0;
-    enum { TX_BUFFER_SIZE = HTTP_SERVER_TX_BUF_SIZE };
+    enum { TX_BUFFER_SIZE = JHTTPD_SERVER_TX_BUF_SIZE };
 };
 
 

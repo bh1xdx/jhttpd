@@ -19,13 +19,10 @@
 
 
 /* -------------------------------------------------------------------------- */
-
-#include "TcpSocket.h"
-
-#include "HttpRequest.h"
+#include "jconfig.h"
+#include "jtcpsocket.h"
+#include "jrequest.h"
 #include "jresponse.h"
-
-#include "config.h"
 
 #include <string>
 
@@ -38,10 +35,10 @@ private:
     TcpSocket::Handle _socketHandle;
     bool _connUp = true;
     HttpRequest::Handle recv();
-    int _connectionTimeOut = HTTP_CONNECTION_TIMEOUT; // secs
+    int _connectionTimeOut = JHTTPD_CONNECTION_TIMEOUT; // secs
 
 public:
-    HttpSocket(int connectionTimeout = HTTP_CONNECTION_TIMEOUT) noexcept :
+    HttpSocket(int connectionTimeout = JHTTPD_CONNECTION_TIMEOUT) noexcept :
         _connectionTimeOut(connectionTimeout) 
     {}
 

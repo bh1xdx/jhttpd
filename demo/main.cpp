@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>
+#include <thread>
 
 #include "jhttpd.h"
 
@@ -64,7 +65,7 @@ std::string index_html=R"html(
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JHTTPD TEST MONITOR</title>
+    <title>JHTTPD DEMO</title>
     <meta http-equiv="refresh" content="1">
 </head>
 
@@ -134,7 +135,7 @@ std::string index_html=R"html(
             }
 </style>
 <body>
-    <h4>VIPSDK MONITOR</h4>
+    <h4>JHTTPD DEMO</h4>
     <table class="hovertable">
         <tr>
             <th>Info Header 1</th>
@@ -188,7 +189,7 @@ inline std::string replace_all(std::string str, const std::string& from, const s
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // JResp
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class JResp : public JHttpRespose
+class JResp : public JHttpResp
 {
 public:
     JResp(){}
@@ -270,10 +271,16 @@ void main()
         if (!s)
             break;
 
-        s->add("", &resp);
-        s->set(&log);
+        s->addResp(&resp);
+        s->setLog(&log);
 
+#if 0
         s->run();
+#else
+        s->run(false);
+        std::this_thread::sleep_for(std::chrono::minutes(2));
+        s->stop();
+#endif
     } while (false);
 
     JHttpdestroyService(s);

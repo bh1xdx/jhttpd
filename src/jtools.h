@@ -20,7 +20,7 @@
 #include <string>
 #include <time.h>
 
-#include "OsSocketSupport.h"
+#include "jossocketsupport.h"
 
 
 /* -------------------------------------------------------------------------- */

@@ -15,8 +15,8 @@
 
 /* -------------------------------------------------------------------------- */
 
-#include "TcpSocket.h"
-#include "OsSocketSupport.h"
+#include "jtcpsocket.h"
+#include "jossocketsupport.h"
 
 #include <atomic>
 #include <chrono>

@@ -14,7 +14,7 @@
 
 
 
-#include "HttpRequest.h"
+#include "jrequest.h"
 
 
 #include "jobject.h"

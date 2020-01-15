@@ -10,7 +10,8 @@
 
 #include <string>
 #include <cstdint>
-#include "httpstatuscode.h"
+
+#include "jstatuscode.h"
 
 /***************************************************************************************************************/
 #if defined _WIN32 || defined __CYGWIN__
@@ -64,7 +65,7 @@ public:
 };
 
 
-class JHTTPD_EXPORT JHttpRespose
+class JHTTPD_EXPORT JHttpResp
 {
 public:
     // get resport data
@@ -75,23 +76,31 @@ public:
 };
 
 
-enum ErCode
+enum class JHttpdErCode
 {
     OK,
     FAIL,
+    INVALID_ARGUMENTS,
+    HAS_EXIST_ARGUMENTS,
+    BIND_PORT_FAIL,
+    LISTEN_PORT_FAIL,
+    HAS_RUNNING,
 };
 
 class JHTTPD_EXPORT JHttpService
 {
 public:
-    virtual ErCode add(const std::string & url, JHttpRespose* response) = 0;
-    virtual ErCode del(const std::string & url, JHttpRespose* response) = 0;
-    virtual ErCode set(JHttpLog *log) = 0;
+    virtual JHttpdErCode addResp(JHttpResp* response) = 0;
+    virtual JHttpdErCode delResp(JHttpResp* response) = 0;
+    virtual JHttpdErCode setLog(JHttpLog *log) = 0;
 
+    virtual JHttpdErCode setRoot(const std::string &root) = 0;
+    virtual JHttpdErCode setPort(const uint32_t & port) = 0;
 
-    virtual ErCode run() = 0;
-    virtual ErCode stop() = 0;
-    virtual void exit() = 0;
+    virtual JHttpdErCode setThreadCount(const uint32_t count) = 0;
+
+    virtual JHttpdErCode run(bool block = true) = 0;
+    virtual void stop() = 0;
 };
 
 extern "C"

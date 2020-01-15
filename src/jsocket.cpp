@@ -9,8 +9,8 @@
 
 /* -------------------------------------------------------------------------- */
 
-#include "HttpSocket.h"
-#include "Tools.h"
+#include "jsocket.h"
+#include "jtools.h"
 
 #include <vector>
 

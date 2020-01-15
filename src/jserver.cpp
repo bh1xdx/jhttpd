@@ -2,7 +2,7 @@
 #include "jserver.h"
 #include "jlog.h"
 
-#include "Tools.h"
+#include "jtools.h"
 
 #include <thread>
 #include <cassert>
@@ -138,7 +138,7 @@ bool JServer::run()
 
     // Create a thread for each TCP accepted connection and
     // delegate it to handle HTTP request / response
-    while (true) {
+    while (_tcpServer) {
         const TcpSocket::Handle handle = accept();
 
         // Fatal error: we stop the server
@@ -151,35 +151,39 @@ bool JServer::run()
             handle, 
             getWebRootPath());
 
-        std::thread workerThread(*taskHandle, taskHandle);
-
-        workerThread.detach();
+        //std::thread workerThread(*taskHandle, taskHandle);
+        //workerThread.detach();
+        m_threadPool->enqueue(*taskHandle, taskHandle);
     }
 
-    m_running.store(true);
+    m_running.store(false);
     return true;
 }
 
+void JServer::stop()
+{
+    if (_tcpServer)
+        _tcpServer.reset();
+}
 
 JLoger &JServer::loger()
 {
-    return m_loger;
+    return JLoger::instance();
 }
-
 
 uint32_t JServer::resp_count() const
 {
     return m_resps.size();
 }
 
-JHttpRespose * JServer::resp_at(uint32_t idx) const
+JHttpResp * JServer::resp_at(uint32_t idx) const
 {
     if (idx >= m_resps.size())
         return nullptr;
     return m_resps.at(idx);
 }
 
-uint32_t JServer::resp_add(JHttpRespose * resp)
+uint32_t JServer::resp_add(JHttpResp * resp)
 {
     uint32_t res = (uint32_t)(-1);
     if (resp && !m_running.load())

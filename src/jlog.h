@@ -11,9 +11,11 @@
 
 class JLoger : public JHttpLog
 {
-public:
     JLoger();
     ~JLoger();
+
+public:
+    static JLoger & instance() { static JLoger l; return l; };
 
     void set_output_device(JHttpLog * d) {
         std::lock_guard<std::mutex> _locker(m_mutex);

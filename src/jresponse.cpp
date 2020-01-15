@@ -1,10 +1,10 @@
 
 #include "jresponse.h"
-#include "Tools.h"
-#include "config.h"
+#include "jtools.h"
+#include "jconfig.h"
 #include "jserver.h"
 #include "jhttpd.h"
-#include "httpstatuscode.h"
+#include "jstatuscode.h"
 
 #include <algorithm>
 
@@ -15,7 +15,7 @@ void JResponse::formatHeader(std::string & header, int code, const std::string &
 
     header = "HTTP/1.1 " + scode + " " + msg + "\r\n";
     header += "Date: " + Tools::getLocalTime() + "\r\n";
-    header += "Server: " HTTP_SERVER_NAME "\r\n";
+    header += "Server: " JHTTPD_SERVER_NAME "\r\n";
     header += "Content-Length: " + std::to_string(content_length) + "\r\n";
     header += "Connection: Keep-Alive\r\n";
     if (!last_modified.empty())
@@ -79,7 +79,7 @@ JResponse::JResponse(JObject * parent,
         JServer * r = root();
         for (uint32_t idx = 0; r && idx < r->resp_count(); idx++)
         {
-            JHttpRespose * resp = r->resp_at(idx);
+            JHttpResp * resp = r->resp_at(idx);
             if (!resp)
                 continue;
 
@@ -94,6 +94,11 @@ JResponse::JResponse(JObject * parent,
         if (resp_status == 200)
             break;
 
+        if (webRootPath.empty())
+        {
+            resp_status = 403;
+            break;
+        }
 
         _localUriPath = webRootPath + _localUriPath;
 
