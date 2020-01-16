@@ -23,12 +23,16 @@ uint64_t Helper::msSinceEpoch()
     return (uint64_t)ts;
 }
 
-std::string Helper::timeByMsSinceEpoch(const uint64_t &ts, const std::string & format /*= "%Y.%m.%d-%H:%M:%S"*/, bool withms /*= true*/)
+std::string Helper::timeByMsSinceEpoch(const uint64_t &ts, const std::string & format /*= "%Y.%m.%d-%H:%M:%S"*/, bool withms /*= true*/, bool local /*= true*/)
 {
     uint64_t sec = ts / 1000;
     auto ms = ts - sec * 1000;
     struct tm _tm;
-    _local_time(_tm, sec);
+
+    if (jhttpd_likely(local))
+        _local_time(_tm, sec);
+    else
+        _gmt_time(_tm, sec);
 
     char buf[1024] = { 0 };
     std::strftime(buf, sizeof(buf), format.c_str(), &_tm);
@@ -55,4 +59,13 @@ void Helper::_local_time(struct tm &_tm, const uint64_t & secSinceEpoch)
 #endif // _WINDOWS
 }
 
+void Helper::_gmt_time(struct tm &_tm, const uint64_t & secSinceEpoch)
+{
+    uint64_t sec = secSinceEpoch;
+#ifdef _WINDOWS
+    gmtime_s(&_tm, (const time_t*)&sec);
+#else // _WINDOWS
+    gmtime_r((const time_t*)&sec, &_tm);
+#endif // _WINDOWS
+}
 
