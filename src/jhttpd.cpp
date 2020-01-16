@@ -46,7 +46,7 @@ JHttpService * JHttpCreateService(const char * root /*= ""*/, uint32_t port /*= 
         if (!Env::good())
             break;
 
-       s = new JService();
+        s = new JService(root ? std::string(root): std::string(""), port);
     } while (false);
     std::cout << __FUNCTION__ << ": done" << std::endl;
     return s;
